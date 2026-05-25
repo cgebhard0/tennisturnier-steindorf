@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, set, get } from 'firebase/database';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDpI-0rnr8Z-DW9jW3ebfuXjSPKksb81mc",
   authDomain: "steindorf-turnier.firebaseapp.com",
   projectId: "steindorf-turnier",

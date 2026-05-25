@@ -22,19 +22,25 @@ export const Header: React.FC<HeaderProps> = ({
   const spieler = spielerListen[bewerb][gruppe] || [];
 
   return (
-    <header className="bg-slate-800 text-white py-4 px-3 text-center sticky top-0 z-50 shadow-lg">
+    <header className="relative bg-slate-900 text-white px-3 pb-4 pt-10 text-center sticky top-0 z-50 shadow-lg overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-amber-300 to-emerald-400" />
       <a
         href="https://tennis-steindorf.at"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-5 rounded-lg mb-4 transition-colors text-base"
+        className="absolute right-2 top-2 rounded-md bg-amber-500 px-2.5 py-1.5 text-xs font-bold text-white shadow-sm transition-colors hover:bg-amber-600 sm:right-3 sm:px-3"
       >
-        🎾 Tennisplatz Online-Buchung
+        Tennisplatz Online-Buchung
       </a>
       
-      <h1 className="text-xl font-bold mb-4 text-emerald-400">
-        Tennis-Turnierverwaltung SC Steindorf
-      </h1>
+      <div className="mb-5 flex justify-center">
+        <h1 className="relative inline-block px-2 text-2xl font-black leading-tight tracking-tight sm:text-3xl">
+          <span className="bg-gradient-to-r from-emerald-300 via-white to-amber-200 bg-clip-text text-transparent drop-shadow-sm">
+            Tennis-Turnierverwaltung SC Steindorf
+          </span>
+          <span className="absolute -bottom-2 left-1/2 h-1 w-24 -translate-x-1/2 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.75)]" />
+        </h1>
+      </div>
       
       <div className="flex justify-center gap-3 flex-wrap">
         <div className="bg-white/20 py-2.5 px-4 rounded-lg border border-white/30 flex items-center gap-2">

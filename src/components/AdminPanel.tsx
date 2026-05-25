@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
-import { database, ref, set, get } from '../lib/firebase';
-import { standardSpiele, Bewerb } from '../data/tournamentData';
+import { database, firebaseConfig, ref, set, get } from '../lib/firebase';
+import {
+  standardSpiele,
+  Bewerb,
+  gruppenStruktur,
+  spielerListen,
+  turnierSpielplaene,
+} from '../data/tournamentData';
+import { appSourceFiles } from '../data/appCodeArchive';
 
 interface AdminPanelProps {
   bewerb: Bewerb;
@@ -29,12 +36,32 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         return;
       }
 
-      const jsonString = JSON.stringify(data, null, 2);
+      const exportPackage = {
+        exportVersion: 2,
+        exportedAt: new Date().toISOString(),
+        firebase: {
+          config: firebaseConfig,
+          exportedDatabasePath: 'turnier',
+        },
+        onlineTournamentData: data,
+        tournamentDefinitions: {
+          gruppenStruktur,
+          spielerListen,
+          turnierSpielplaene,
+          standardSpiele,
+        },
+        appCode: {
+          format: 'path-to-source-content',
+          sourceFiles: appSourceFiles,
+        },
+      };
+
+      const jsonString = JSON.stringify(exportPackage, null, 2);
       const blob = new Blob([jsonString], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const downloadAnchor = document.createElement('a');
       downloadAnchor.href = url;
-      downloadAnchor.download = `sc_steindorf_turnier_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      downloadAnchor.download = `sc_steindorf_turnier_full_export_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       document.body.removeChild(downloadAnchor);
@@ -66,8 +93,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     reader.onload = async (e) => {
       try {
         const importedJson = JSON.parse(e.target?.result as string);
-        if (typeof importedJson === 'object' && importedJson !== null) {
-          await set(ref(database, 'turnier'), importedJson);
+        const importData = importedJson?.onlineTournamentData || importedJson;
+        if (typeof importData === 'object' && importData !== null) {
+          await set(ref(database, 'turnier'), importData);
           alert("Backup erfolgreich eingespielt und online aktualisiert!");
           onDataReset();
         } else {
